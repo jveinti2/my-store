@@ -33,6 +33,17 @@ app.get('/prodcuts/details', function (req, res) {
   ]);
 });
 
+app.get('/prodcuts/details/otro', function (req, res) {
+  res.json([
+    {
+      name: 'Product 1',
+    },
+    {
+      name: 'Product 2',
+    },
+  ]);
+});
+
 app.get('/products/:id', (req, res) => {
   const { id } = req.params;
   res.json({
