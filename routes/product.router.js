@@ -2,6 +2,7 @@ const faker = require('faker');
 const express = require('express');
 
 const router = express.Router();
+
 //Get
 router.get('/', function (req, res) {
   const products = [];
@@ -29,14 +30,17 @@ router.get('/prodcuts/details', function (req, res) {
   ]);
 });
 
-
 router.get('/products/:id', (req, res) => {
   const { id } = req.params;
-  res.json({
-    id,
-    name: 'Product quemado',
-    price: 'Precio quemado',
-  });
+  id === '999'
+    ? res.status(404).json({
+        message: 'Product not found',
+      })
+    : res.status(201).json({
+        id,
+        name: 'Product quemado',
+        price: 'Precio quemado',
+      });
 });
 
 router.get('/category/:idCategory/products/:idProducts', (req, res) => {
@@ -51,31 +55,31 @@ router.get('/category/:idCategory/products/:idProducts', (req, res) => {
 
 //Post
 router.post('/', function (req, res) {
-  const body = req.body
-  res.json({
+  const body = req.body;
+  res.status(201).json({
     message: 'Product created',
-    data: body
-  })
-})
+    data: body,
+  });
+});
 
 //Patch
 router.patch('/:id', (req, res) => {
-  const { id } = req.params
-  const body = req.body
+  const { id } = req.params;
+  const body = req.body;
   res.json({
     message: 'Product updated',
     data: body,
-    id
-  })
-})
+    id,
+  });
+});
 
 //Delete
 router.delete('/:id', function (req, res) {
-  const { id } = req.params
+  const { id } = req.params;
   res.json({
-    message: "Deleted",
-    id
-  })
-})
+    message: 'Deleted',
+    id,
+  });
+});
 
 module.exports = router;
