@@ -1,3 +1,4 @@
+const { response } = require('express');
 const express = require('express');
 const ProductsServices = require('./../services/product.service');
 
@@ -5,8 +6,8 @@ const router = express.Router();
 const service = new ProductsServices();
 
 //Get
-router.get('/', function (req, res) {
-  const products = service.find();
+router.get('/', async function (req, res) {
+  const products = await service.find();
   res.send(products);
 });
 
@@ -21,9 +22,9 @@ router.get('/prodcuts/details', function (req, res) {
   ]);
 });
 
-router.get('/products/:id', (req, res) => {
+router.get('/products/:id', async (req, res) => {
   const { id } = req.params;
-  const product = service.findOne(id);
+  const product = await service.findOne(id);
   res.json(product);
 });
 
@@ -38,32 +39,37 @@ router.get('/category/:idCategory/products/:idProducts', (req, res) => {
 });
 
 //Post
-router.post('/', function (req, res) {
+router.post('/', async function (req, res) {
   const body = req.body;
+  const newProduct = await service.create(body);
   res.status(201).json({
     message: 'Product created',
-    data: body,
+    newProduct,
   });
 });
 
 //Patch
-router.patch('/:id', (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-  res.json({
-    message: 'Product updated',
-    data: body,
-    id,
-  });
+router.patch('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const newProduct = await service.update(id, body);
+    res.json({
+      message: 'Product updated',
+      newProduct,
+    });
+  } catch (error) {
+    res.status(404).json({
+      message: error.message,
+    });
+  }
 });
 
 //Delete
-router.delete('/:id', function (req, res) {
+router.delete('/:id', async function (req, res) {
   const { id } = req.params;
-  res.json({
-    message: 'Deleted',
-    id,
-  });
+  const rta = await service.delete(id);
+  res.json(rta);
 });
 
 module.exports = router;
